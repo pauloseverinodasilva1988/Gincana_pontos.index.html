@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Gincana - Contabilizador de Pontos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+        }
+
+        .container {
+            width: 100%;
+            height: 100vh;
+            max-width: 500px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #8B4513 0%, #D4AF37 100%);
+            padding: 15px 20px;
+            text-align: center;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 2px;
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            font-size: 12px;
+            opacity: 0.95;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            padding: 15px;
+            background: #f8f9fa;
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .team {
+            background: white;
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .team.branco {
+            border-top: 4px solid #f0f0f0;
+        }
+
+        .team.verde {
+            border-top: 4px solid #27ae60;
+        }
+
+        .team-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .team.branco .team-name {
+            color: #555;
+        }
+
+        .team.verde .team-name {
+            color: #27ae60;
+        }
+
+        .score {
+            font-size: 36px;
+            font-weight: 700;
+            margin: 8px 0;
+            color: #333;
+        }
+
+        .team.branco .score {
+            color: #888;
+        }
+
+        .team.verde .score {
+            color: #27ae60;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .button-group-four {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 4px;
+        }
+
+        button {
+            padding: 8px 6px;
+            border: none;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            min-height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+        }
+
+        .btn-add:active {
+            transform: scale(0.95);
+        }
+
+        .btn-subtract {
+            background: linear-gradient(135deg, #e74c3c 0%, #ec7063 100%);
+            color: white;
+        }
+
+        .btn-subtract:active {
+            transform: scale(0.95);
+        }
+
+        .btn-add-large {
+            background: linear-gradient(135deg, #D4AF37 0%, #FFD700 100%);
+            color: #333;
+            font-weight: 700;
+            grid-column: 1 / -1;
+            font-size: 12px;
+        }
+
+        .btn-add-large:active {
+            transform: scale(0.95);
+        }
+
+        .btn-reset {
+            background: #95a5a6;
+            color: white;
+            font-size: 10px;
+            padding: 6px 8px;
+            margin-top: 6px;
+        }
+
+        .btn-reset:active {
+            transform: scale(0.95);
+        }
+
+        .footer {
+            background: #f0f0f0;
+            padding: 10px 15px;
+            text-align: center;
+            color: #666;
+            font-size: 11px;
+            border-top: 1px solid #e0e0e0;
+            flex-shrink: 0;
+        }
+
+        .reset-all-btn {
+            background: #e74c3c;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .reset-all-btn:active {
+            transform: scale(0.95);
+        }
+
+        .footer p {
+            margin: 0;
+            font-size: 10px;
+        }
+
+        @media (max-height: 600px) {
+            .header {
+                padding: 10px 15px;
+            }
+
+            .header h1 {
+                font-size: 18px;
+                margin-bottom: 0;
+            }
+
+            .header p {
+                font-size: 10px;
+            }
+
+            .dashboard {
+                padding: 10px;
+                gap: 10px;
+            }
+
+            .team {
+                padding: 10px;
+            }
+
+            .score {
+                font-size: 32px;
+                margin: 6px 0;
+            }
+
+            .team-name {
+                font-size: 12px;
+                margin-bottom: 6px;
+            }
+
+            .button-group-four {
+                gap: 3px;
+            }
+
+            button {
+                padding: 6px 4px;
+                font-size: 10px;
+                min-height: 32px;
+            }
+
+            .footer {
+                padding: 8px 12px;
+            }
+
+            .reset-all-btn {
+                padding: 8px 12px;
+                font-size: 11px;
+                margin-bottom: 6px;
+            }
+        }
+
+        @media (max-height: 500px) {
+            .header {
+                padding: 8px 12px;
+            }
+
+            .header h1 {
+                font-size: 16px;
+            }
+
+            .dashboard {
+                padding: 8px;
+                gap: 8px;
+            }
+
+            .team {
+                padding: 8px;
+            }
+
+            .score {
+                font-size: 28px;
+                margin: 4px 0;
+            }
+
+            button {
+                padding: 5px 3px;
+                font-size: 9px;
+                min-height: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚡ GINCANA</h1>
+            <p>Contabilizador de Pontos</p>
+        </div>
+
+        <div class="dashboard">
+            <!-- Equipe Branco -->
+            <div class="team branco">
+                <div>
+                    <div class="team-name">BRANCO</div>
+                    <div class="score" id="scoreBranco">0</div>
+                </div>
+                <div class="controls">
+                    <div class="button-group-four">
+                        <button class="btn-subtract" onclick="addPoints('branco', -5)">-5</button>
+                        <button class="btn-subtract" onclick="addPoints('branco', -10)">-10</button>
+                        <button class="btn-add" onclick="addPoints('branco', 10)">+10</button>
+                        <button class="btn-add" onclick="addPoints('branco', 10)">+10</button>
+                    </div>
+                    <button class="btn-add-large" onclick="addPoints('branco', 50)">+50</button>
+                    <button class="btn-reset" onclick="resetTeam('branco')">Resetar</button>
+                </div>
+            </div>
+
+            <!-- Equipe Verde -->
+            <div class="team verde">
+                <div>
+                    <div class="team-name">VERDE</div>
+                    <div class="score" id="scoreVerde">0</div>
+                </div>
+                <div class="controls">
+                    <div class="button-group-four">
+                        <button class="btn-subtract" onclick="addPoints('verde', -5)">-5</button>
+                        <button class="btn-subtract" onclick="addPoints('verde', -10)">-10</button>
+                        <button class="btn-add" onclick="addPoints('verde', 10)">+10</button>
+                        <button class="btn-add" onclick="addPoints('verde', 10)">+10</button>
+                    </div>
+                    <button class="btn-add-large" onclick="addPoints('verde', 50)">+50</button>
+                    <button class="btn-reset" onclick="resetTeam('verde')">Resetar</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <button class="reset-all-btn" onclick="resetAll()">Resetar Tudo</button>
+            <p>Clique nos botões para adicionar ou remover pontos</p>
+        </div>
+    </div>
+
+    <script>
+        // Inicializar pontuações do localStorage
+        let scores = {
+            branco: parseInt(localStorage.getItem('scoreBranco')) || 0,
+            verde: parseInt(localStorage.getItem('scoreVerde')) || 0
+        };
+
+        // Atualizar exibição inicial
+        updateDisplay();
+
+        function addPoints(team, points) {
+            scores[team] += points;
+            // Evitar pontuações negativas
+            if (scores[team] < 0) {
+                scores[team] = 0;
+            }
+            localStorage.setItem('score' + team.charAt(0).toUpperCase() + team.slice(1), scores[team]);
+            updateDisplay();
+            animateButton(event.target);
+        }
+
+        function resetTeam(team) {
+            if (confirm(`Tem certeza que deseja resetar a equipe ${team.toUpperCase()}?`)) {
+                scores[team] = 0;
+                localStorage.setItem('score' + team.charAt(0).toUpperCase() + team.slice(1), 0);
+                updateDisplay();
+            }
+        }
+
+        function resetAll() {
+            if (confirm('Tem certeza que deseja resetar TODAS as equipes?')) {
+                scores.branco = 0;
+                scores.verde = 0;
+                localStorage.setItem('scoreBranco', 0);
+                localStorage.setItem('scoreVerde', 0);
+                updateDisplay();
+            }
+        }
+
+        function updateDisplay() {
+            document.getElementById('scoreBranco').textContent = scores.branco;
+            document.getElementById('scoreVerde').textContent = scores.verde;
+        }
+
+        function animateButton(button) {
+            button.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                button.style.transform = 'scale(1)';
+            }, 100);
+        }
+
+        // Prevenir zoom duplo ao fazer double-tap
+        document.addEventListener('touchend', function(event) {
+            if (event.touches.length === 0) {
+                event.preventDefault();
+            }
+        }, false);
+    </script>
+</body>
+</html>
